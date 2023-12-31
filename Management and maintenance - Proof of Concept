@@ -1,0 +1,125 @@
+# Sudo nano /etc/hostname: Change computer name
+
+# "Whom": display the computer in use
+
+# sudo apt-get install -y cron
+# sudo systemctl enable --now cron
+# Run Cron Tab and select the automation: “crontab -e”
+# “@hourly /path/to/command_or_script” = “0 * * * * /path/to/command_or_script”: Run an hourly command automatically.
+
+# “sudo apt-get install -y git”: install GIT
+# “Git --version”: check git version
+# git config --global user.name "iordanismusic"
+# git config --global user.email L00162407@atu.ie
+# “Git init”: initialise GIT in a specific folder
+
+# Sudo apt update
+# sudo apt install apache2
+# Start Apache: “sudo systemctl start apache2”
+# Automatically enable Apache to start on boot: “sudo systemctl enable apache2”
+
+# Ip check: “ip a”
+
+# “tree”
+
+# Sudo adduser (username): Automatically also creates a group with that user name. Users: haris, nikos, Vasilis, brucedickinson, steveharris, davemurray, adriansmith, 
+# Show all users: “cut --delimiter=: --fields=1 /etc/passwd”
+# Sign in as any user: “cu - (username)”
+# “Exit”: exits the user account
+# “Sudo addgroup (group name)”: added ironmaiden, traditional, rock, greek
+# Add users to groups (or change): “sudo usermod -a -G (group name) (user name)”: added brucedickinson, steveharris, davemurray, and Adriansmith to Ironmaiden. 
+# Check users in the group: “cat /etc/group  | cut —delimiter=: —fields=1,4 | grep (group name)
+
+# Deleting users: “sudo deluser (user) (group)”
+# Deleting groups: “sudo delgroup (group)”
+
+# Short List Access Control: sudo apt install acl
+# Created a directory: “mkdir musicofrevolutiontest1”
+# Chmod 777 musicofrevolutiontest1
+# Created directories: greekmusicdir, rockdir, traditionaldir
+# Created “touch” files into each directory after assigning users to groups and the groups to directories.
+
+# “Getfacl (file name)”: get info about access permissions of each file
+# “Setfacl: -m g:(group name):(permissions) (directory name)” Created a new directory called “onlyharis” and changed its permissions
+
+# Logged in with user “nikos” and I managed to created a file in “onlyharisdir”. That is because a gave permission to group “greek” to write files. So every user belonging to that group will eventually be able to write files in that dir.
+# “Mv (old name) (new name)”: changing name of a file. “Onlyharis” was changed to “norock” since the only owner group denied is “rock”
+
+# File Server: Installing Samba: sudo apt update
+# Sudo apt install samba
+
+# Configuring Samba to share folders. Adjusting the /etc/samba/smb.conf file to share the “musicofrevolutiontest1”: 
+# [share]
+#   comment = Shared Music Folder
+#   path = /path/to/shared/musicofrevolutiontest1
+#   browseable = yes
+#   read only = no
+#   valid users = iordanis
+
+# DNS server download bind: sudo apt update
+# Sudo apt install bind9
+# Configuring bind: “sudo nano /etc/bind/named.conf.options”
+# options {
+#     directory "/var/cache/bind";
+#     recursion yes;
+#     allow-query { any; };
+#     forwarders {
+#         8.8.8.8;
+#         8.8.4.4;
+#     };
+# };
+
+# Creating forward reverse zones:
+# $TTL 86400
+# @   IN  SOA     ns1.musicofrevolution.com. admin.musicofrevolution.com. (
+#                2023010101 ; Serial
+#                 3600       ; Refresh
+#                 1800       ; Retry
+#                 604800     ; Expire
+#                 86400 )    ; Minimum
+# @       IN  NS      ns1.musicofrevolution.com.
+# @       IN  A       192.168.1.1
+# www     IN  A       192.168.1.2
+
+
+
+# Creating Reverse zone file: 
+#  $TTL 86400
+# @   IN  SOA     ns1.musicofrevolution.com. admin.musicofrevolution.com. (
+#                 2023010101 ; Serial
+#                 3600       ; Refresh
+#                 1800       ; Retry
+#                 604800     ; Expire
+#                 86400 )    ; Minimum
+# @       IN  NS      ns1.musicofrevolution.com.
+# 1.1     IN  PTR     musicofrevolution.com.
+# 2.1     IN  PTR     www.musicofrevolution.com.
+
+
+
+#  Updating Named configuration:
+# 	Edit: sudo nano /etc/bind/named.conf.local
+# 	Adding the following lines:
+# zone "musicofrevolution.com" {
+#     type master;
+#     file "/etc/bind/db.musicofrevolution.com";
+# };
+# 
+# zone "1.168
+ 
+# sudo nano /etc/bind/db.root
+# sudo service bind9 restart
+# sudo systemctl status named.service
+ 
+# Renaming the LAN servers:
+# sudo nano /etc/hosts
+# cat /etc/hosts
+
+# Ping -c 5 fileserver.local
+# Ping -c 5 serverWEB.local
+# Ping -c 5 serverDNS.local
+# Ping -c 5 rooter
+
+# Installing Samba Client: sudo apt update
+# Sudo apt install smbdclient
+# Access the shared directory:   smbclient //serverFILE.local/share -U iordanis
